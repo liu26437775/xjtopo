@@ -1,3 +1,6 @@
 import helloworld from "./helloworld.js"
-document.write("我的第一个webpack应用");
-helloworld();
+import Node from "./node.js"
+export default function but(){
+				var node=new Node("1111");
+				alert(node.getName());
+			}
