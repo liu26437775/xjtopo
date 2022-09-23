@@ -1,14 +1,27 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+
 module.exports = {
 	//编译模式
-	mode: 'production', //development production
+	mode: 'development', //development production
 	module: {
 		rules: [{
-			test: /\.css$/,
-			use: [MiniCssExtractPlugin.loader, 'css-loader']
-		}]
+				test: /\.css$/,
+				use: [MiniCssExtractPlugin.loader, 'css-loader']
+			},
+			{
+				test: '/\.js$/',
+				exclude: /node_modules/,
+		 	use: {
+					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-env']
+					}
+				}
+			}
+		]
 	},
 	plugins: [new HtmlWebpackPlugin({
 			template: './index.html', //需要放打包文件的html模板路径
@@ -20,8 +33,14 @@ module.exports = {
 	],
 	entry: path.join(__dirname, './src/index.js'),
 	output: {
-		path: path.join(__dirname, './dist'), //输出文件的存放路径
-		filename: 'bundle.js' //输出文件的名称
+		path: path.resolve(__dirname, "dist"),
+		filename: "jxtopo.js",
+		library: "jxtopo", // 在全局变量中增加一个library变量
+		libraryTarget: "umd",
+		environment: {
+			// 是否使用箭头函数
+			arrowFunction: false,
+		},
 	},
 	devServer: {
 		//....//
@@ -29,9 +48,9 @@ module.exports = {
 			directory: path.join(__dirname, './'),
 			watch: true
 		},
-		// 启动gzip压缩，提高效率
-		compress: false,
 		// 指定端口号:5000
+		compress: true,
 		port: 9000
-	}
+	},
+	target: ['web', 'es5']
 }
